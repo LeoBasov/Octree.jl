@@ -83,9 +83,18 @@ function _build_next_level!(tree, parent_id, positions)
 
         for elem_id in runner_idx:parent.offset + parent.n_elements
             if is_in_box(leaf.box, positions[tree.elements[elem_id]])
-                #TODO
+                tree.elements[elem_id], tree.elements[runner_idx] = tree.elements[runner_idx], tree.elements[elem_id]
+                leaf.n_elements += 1
+                runner_idx += 1
             end
         end
+
+        parent.children[i] = length(tree.leafs) - 8 + i
+        tree.leaf[length(tree.leafs) - 8 + i] = leaf
+    end
+
+    for i in 1:8
+        _build_next_level!(tree, parent.children[i], positions)
     end
 end
 
