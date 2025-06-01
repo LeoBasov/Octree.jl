@@ -21,6 +21,8 @@ end
     tree = Octree.build(positions)
     root = tree.leafs[1]
 
+    @test length(tree.elements) == N_positions
+
     @test root.box.xmin == [-1.0, -2.0, -3.0]
     @test root.box.xmax == [4.0, 5.0, 6.0]
     @test root.box.center == [1.5, 1.5, 1.5]
@@ -29,4 +31,14 @@ end
     @test root.offset == 0
     @test root.n_elements == N_positions
     @test root.parent == 0
+    @test length(root.children) == 8
+
+    n_sum = 0
+
+    for i in 1:8
+        leaf = tree.leafs[root.children[i]]
+        n_sum += leaf.n_elements
+    end
+
+    @test N_positions == n_sum
 end

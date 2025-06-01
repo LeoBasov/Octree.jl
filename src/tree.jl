@@ -65,13 +65,13 @@ function _build_next_level!(tree, parent_id, positions)
     parent = tree.leafs[parent_id]
 
     # dummy check
-    if parent.n_elements > 10
+    if parent.n_elements < 10
         return
     end
 
     boxes = _create_children_boxes(parent.box)
     offset = parent.offset
-    runner_idx = parent.offset
+    runner_idx = parent.offset + 1
 
     resize!(tree.leafs, length(tree.leafs) + 8)
     resize!(parent.children, 8)
@@ -90,7 +90,7 @@ function _build_next_level!(tree, parent_id, positions)
         end
 
         parent.children[i] = length(tree.leafs) - 8 + i
-        tree.leaf[length(tree.leafs) - 8 + i] = leaf
+        tree.leafs[length(tree.leafs) - 8 + i] = leaf
     end
 
     for i in 1:8
@@ -108,9 +108,11 @@ function _create_children_boxes(box::Cuboid)
     box6 = Cuboid([box.center[1], box.xmin[2], box.center[3]], [box.xmax[1], box.center[2], box.xmax[3]])
     box7 = Cuboid([box.center[1], box.center[2], box.center[3]], [box.xmax[1], box.xmax[2], box.xmax[3]])
     box8 = Cuboid([box.xmin[1], box.center[2], box.center[3]], [box.center[1], box.xmax[2], box.xmax[3]])
+
+    return (box1, box2, box3, box4, box5, box6, box7, box8)
 end
 
-function is_in_box(box::Cuboid, pos::Vector{AbstractFloat})
+function is_in_box(box::Cuboid, pos::Vector)
     inx = pos[1] <= box.xmax[1] && pos[1] >= box.xmin[1]
     iny = pos[2] <= box.xmax[2] && pos[2] >= box.xmin[2]
     inz = pos[3] <= box.xmax[3] && pos[3] >= box.xmin[3]
