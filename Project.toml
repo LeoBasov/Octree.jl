@@ -1,0 +1,4 @@
+name = "Octree"
+uuid = "f3b9d4a4-8423-4506-a0c4-b05e66906d07"
+authors = ["LeoBasov <40352679+LeoBasov@users.noreply.github.com>"]
+version = "0.1.0"
