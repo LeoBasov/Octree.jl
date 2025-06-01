@@ -1,5 +1,5 @@
 module Octree
 
-greet() = print("Hello World!")
+greet() = return "Hello World!"
 
 end # module Octree
