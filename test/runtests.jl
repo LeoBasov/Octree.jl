@@ -16,7 +16,7 @@ function create_positions(N, pos_min = [-1.0, -2.0, -3.0], pos_max = [4.0, 5.0, 
 end
 
 @testset "tree.jl" begin
-    N_positions = 100
+    N_positions = 10
     positions = create_positions(N_positions)
     tree = Octree.build(positions)
     root = tree.leafs[1]
@@ -41,4 +41,5 @@ end
     end
 
     @test N_positions == n_sum
+    @test length(tree.buttom_leafs) == 8
 end

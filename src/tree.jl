@@ -22,8 +22,9 @@ end
 mutable struct Tree
     elements::Vector{Integer}
     leafs::Vector{Leaf}
+    buttom_leafs::Vector{Integer}
 
-    Tree(root, positions) = new([i for i in eachindex(positions)], [root])
+    Tree(root, positions) = new([i for i in eachindex(positions)], [root], [])
 end
 
 function build(positions)
@@ -66,6 +67,7 @@ function _build_next_level!(tree, parent_id, positions)
 
     # dummy check
     if parent.n_elements < 10
+        push!(tree.buttom_leafs, parent_id)
         return
     end
 
