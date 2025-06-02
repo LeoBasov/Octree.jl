@@ -2,11 +2,12 @@ using WriteVTK
 using Octree
 
 function write_vtk(file_name, tree)
-    points::Matrix{Float64} = zeros(3, 8*length(tree.leafs))
+    points::Matrix{Float64} = zeros(3, 8*length(tree.buttom_leafs))
     cells::Vector{MeshCell} = []
     idx = 0
 
-    for leaf in tree.leafs
+    for leaf_id in tree.buttom_leafs
+        leaf = tree.leafs[leaf_id]
         nodes = get_nodes(leaf.box)
 
         for i in 1:8
