@@ -4,7 +4,11 @@ authors = ["LeoBasov <40352679+LeoBasov@users.noreply.github.com>"]
 version = "0.1.0"
 
 [deps]
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+WriteVTK = "64499a7a-5c06-52f2-abe2-ccb03c286192"
 
 [compat]
+Revise = "3.8.0"
 Test = "1.11.0"
+WriteVTK = "1.21.2"
