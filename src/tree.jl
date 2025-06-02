@@ -88,6 +88,7 @@ function _build_next_level!(tree, parent_id, positions)
                 tree.elements[elem_id], tree.elements[runner_idx] = tree.elements[runner_idx], tree.elements[elem_id]
                 leaf.n_elements += 1
                 runner_idx += 1
+                offset += 1
             end
         end
 
@@ -120,4 +121,21 @@ function is_in_box(box::Cuboid, pos::Vector)
     inz = pos[3] <= box.xmax[3] && pos[3] >= box.xmin[3]
 
     return inx && iny && inz
+end
+
+function get_nodes(box::Cuboid)
+    xmin = box.xmin
+    xmax = box.xmax
+
+    pos1 = [xmin[1], xmin[2], xmin[3]]
+    pos2 = [xmax[1], xmin[2], xmin[3]]
+    pos3 = [xmin[1], xmax[2], xmin[3]]
+    pos4 = [xmax[1], xmax[2], xmin[3]]
+
+    pos5 = [xmin[1], xmin[2], xmax[3]]
+    pos6 = [xmax[1], xmin[2], xmax[3]]
+    pos7 = [xmin[1], xmax[2], xmax[3]]
+    pos8 = [xmax[1], xmax[2], xmax[3]]
+
+    return (pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8)
 end

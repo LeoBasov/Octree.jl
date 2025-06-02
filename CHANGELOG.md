@@ -13,3 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - basic octree structure
 - resolution criterium based on element number with a hard coded threshhold
+
+## [0.2.0] - 2025-06-02
+
+### Added
+
+- vtk writer
+
+### Fixed
+
+- several bugs in tree code
