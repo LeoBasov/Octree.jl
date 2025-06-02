@@ -1,5 +1,5 @@
 module Octree
 
-greet() = return "Hello World!"
+include("tree.jl")
 
 end # module Octree
