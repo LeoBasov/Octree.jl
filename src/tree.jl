@@ -88,6 +88,7 @@ function _build_next_level!(tree, parent_id, positions)
                 tree.elements[elem_id], tree.elements[runner_idx] = tree.elements[runner_idx], tree.elements[elem_id]
                 leaf.n_elements += 1
                 runner_idx += 1
+                offset += 1
             end
         end
 

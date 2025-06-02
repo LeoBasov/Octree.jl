@@ -90,4 +90,26 @@ end
     @test nodes[6] == [4.0, -2.0, 6.0]
     @test nodes[7] == [-1.0, 5.0, 6.0]
     @test nodes[8] == xmax
+
+    if tree.leafs[2].n_elements > 0 && tree.leafs[3].n_elements > 0
+        @test tree.leafs[2].offset != tree.leafs[3].offset
+    end
+    if tree.leafs[3].n_elements > 0 && tree.leafs[4].n_elements > 0
+        @test tree.leafs[3].offset != tree.leafs[4].offset
+    end
+    if tree.leafs[4].n_elements > 0 && tree.leafs[5].n_elements > 0
+        @test tree.leafs[4].offset != tree.leafs[5].offset
+    end
+    if tree.leafs[5].n_elements > 0 && tree.leafs[6].n_elements > 0
+        @test tree.leafs[5].offset != tree.leafs[6].offset
+    end
+    if tree.leafs[6].n_elements > 0 && tree.leafs[7].n_elements > 0
+        @test tree.leafs[6].offset != tree.leafs[7].offset
+    end
+    if tree.leafs[7].n_elements > 0 && tree.leafs[8].n_elements > 0
+        @test tree.leafs[7].offset != tree.leafs[8].offset
+    end
+    if tree.leafs[8].n_elements > 0 && tree.leafs[9].n_elements > 0
+        @test tree.leafs[8].offset != tree.leafs[9].offset
+    end
 end
