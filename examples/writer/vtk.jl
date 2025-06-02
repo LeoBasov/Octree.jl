@@ -1,21 +1,37 @@
 using Octree
 
-function create_positions(N, pos_min = [-1.0, -2.0, -3.0], pos_max = [4.0, 5.0, 6.0])
+function create_positions(N)
     positions = Vector{Vector{Float64}}(undef, N)
-    diff = pos_max - pos_min
+    radius = 1.0
 
     for i = 1:N - 1
-        positions[i] = pos_min + rand(3).*diff
-    end
+        phi = rand() * 2.0 * pi
+        theta = rand() * pi
+        r = 0.01 * randn()
+        theta1 = rand() * pi - 0.5 * pi
 
-    positions[N - 1] = pos_min
-    positions[N] = pos_max
+        dis = [r * sin(theta) * cos(phi), r * sin(theta) * sin(phi), r * cos(theta)]
+        offset = [radius * sin(theta1), radius * cos(theta1), 0.0]
+        dis += offset
+
+        positions[i] = dis
+    end
+    
+    positions[N] = [0.0, -1.0, 0.0]
 
     return positions
 end
 
-particles = create_positions(10000)
+particles = create_positions(20000)
 tree = build(particles)
 write_vtk("vtk_test", tree)
+
+open("particles.csv", "w") do file
+    write(file, "x,y,z\n")
+
+    for pos in particles
+        write(file, string(pos[1]) * "," * string(pos[2]) * "," * string(pos[3]) * "\n")
+    end
+end
 
 print("done")
