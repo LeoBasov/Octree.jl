@@ -166,11 +166,20 @@ function _merge_boxes(_boxes, aspect_ratio)
     merge[3] = diff[1] / diff[3] > aspect_ratio || diff[2] / diff[3] > aspect_ratio
 
     if merge[1] && merge[2]
-        #TODO
+        box1 = Cuboid(boxes[1].xmin, boxes[3].xmax)
+        box2 = Cuboid(boxes[4].xmin, boxes[6].xmax)
+
+        boxes = (box1, box2)
     elseif merge[1] && merge[3]
-        #TODO
+        box1 = Cuboid(boxes[1].xmin, boxes[8].xmax)
+        box2 = Cuboid(boxes[2].xmin, boxes[7].xmax)
+
+        boxes = (box1, box2)
     elseif merge[2] && merge[3]
-        #TODO
+        box1 = Cuboid(boxes[1].xmin, boxes[8].xmax)
+        box2 = Cuboid(boxes[2].xmin, boxes[7].xmax)
+
+        boxes = (box1, box2)
     elseif merge[1]
         box1 = Cuboid(boxes[1].xmin, [boxes[2].xmax[1], boxes[1].xmax[2], boxes[1].xmax[3]])
         box2 = Cuboid(boxes[4].xmin, [boxes[3].xmax[1], boxes[4].xmax[2], boxes[4].xmax[3]])

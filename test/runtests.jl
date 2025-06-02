@@ -15,6 +15,24 @@ function create_positions(N, pos_min = [-1.0, -2.0, -3.0], pos_max = [4.0, 5.0, 
     return positions
 end
 
+function test_asptect_ratio()
+    config = Config()
+    particles = create_positions(1000, [-1, 0.0, 0.0], [1.0, 1.0, 1.0])
+
+    config.aspect_ratio = 1.5
+
+    tree = build(particles; config)
+
+    for i = 2:length(tree.leafs)
+        box = tree.leafs[i].box
+        diff = box.xmax - box.xmin
+
+        @test diff[2] / diff[1] < 1.5 && diff[3] / diff[1] < 1.5
+        @test diff[1] / diff[2] < 1.5 && diff[3] / diff[2] < 1.5
+        @test diff[1] / diff[3] < 1.5 && diff[2] / diff[3] < 1.5
+    end
+end
+
 @testset "tree.jl" begin
     N_positions = 10
     positions = create_positions(N_positions)
@@ -112,4 +130,6 @@ end
     if tree.leafs[8].n_elements > 0 && tree.leafs[9].n_elements > 0
         @test tree.leafs[8].offset != tree.leafs[9].offset
     end
+
+    test_asptect_ratio()
 end
