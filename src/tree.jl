@@ -81,7 +81,7 @@ function _build_next_level!(tree, parent_id, positions)
     end
 
     boxes = _create_children_boxes(parent.box)
-    boxes = _check_box(boxes, tree.config.aspect_ratio)
+    boxes = _merge_boxes(boxes, tree.config.aspect_ratio)
     offset = parent.offset
     runner_idx = parent.offset + 1
     n_childre = length(boxes)
@@ -151,7 +151,9 @@ function get_nodes(box::Cuboid)
     return (pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8)
 end
 
-function _check_box(boxes, aspect_ratio)
+function _merge_boxes(_boxes, aspect_ratio)
+    boxes = deepcopy(_boxes)
+
     if aspect_ratio == 0.0
         return boxes
     end
@@ -163,13 +165,28 @@ function _check_box(boxes, aspect_ratio)
     merge[2] = diff[1] / diff[2] > aspect_ratio || diff[3] / diff[2] > aspect_ratio
     merge[3] = diff[1] / diff[3] > aspect_ratio || diff[2] / diff[3] > aspect_ratio
 
-    if merge[1]
+    if merge[1] && merge[2]
+        #TODO
+    elseif merge[1] && merge[3]
+        #TODO
+    elseif merge[2] && merge[3]
+        #TODO
+    elseif merge[1]
         box1 = Cuboid(boxes[1].xmin, [boxes[2].xmax[1], boxes[1].xmax[2], boxes[1].xmax[3]])
         box2 = Cuboid(boxes[4].xmin, [boxes[3].xmax[1], boxes[4].xmax[2], boxes[4].xmax[3]])
         box3 = Cuboid(boxes[5].xmin, [boxes[6].xmax[1], boxes[5].xmax[2], boxes[5].xmax[3]])
         box4 = Cuboid(boxes[6].xmin, [boxes[7].xmax[1], boxes[8].xmax[2], boxes[8].xmax[3]])
 
-        return (box1, box2, box3, box4)
+        boxes = (box1, box2, box3, box4)
+    elseif merge[2]
+        #TODO
+    elseif merge[3]
+        box1 = Cuboid(boxes[1].xmin, [boxes[1].xmax[1], boxes[1].xmax[2], boxes[5].xmax[3]])
+        box2 = Cuboid(boxes[2].xmin, [boxes[2].xmax[1], boxes[2].xmax[2], boxes[6].xmax[3]])
+        box3 = Cuboid(boxes[3].xmin, [boxes[3].xmax[1], boxes[3].xmax[2], boxes[7].xmax[3]])
+        box4 = Cuboid(boxes[4].xmin, [boxes[4].xmax[1], boxes[4].xmax[2], boxes[8].xmax[3]])
+
+        boxes = (box1, box2, box3, box4)
     end
 
     return boxes
