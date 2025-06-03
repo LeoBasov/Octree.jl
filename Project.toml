@@ -1,7 +1,7 @@
 name = "Octree"
 uuid = "f3b9d4a4-8423-4506-a0c4-b05e66906d07"
 authors = ["LeoBasov <40352679+LeoBasov@users.noreply.github.com>"]
-version = "0.2.0"
+version = "0.3.0"
 
 [deps]
 Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"

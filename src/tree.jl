@@ -1,3 +1,11 @@
+mutable struct Config
+    aspect_ratio::AbstractFloat
+
+    function Config(;aspect_ratio = 0.0)
+        new(aspect_ratio)
+    end
+end
+
 struct Cuboid
     xmin::Vector{AbstractFloat}
     xmax::Vector{AbstractFloat}
@@ -23,13 +31,14 @@ mutable struct Tree
     elements::Vector{Integer}
     leafs::Vector{Leaf}
     buttom_leafs::Vector{Integer}
+    config::Config
 
-    Tree(root, positions) = new([i for i in eachindex(positions)], [root], [])
+    Tree(root, positions, config) = new([i for i in eachindex(positions)], [root], [], config)
 end
 
-function build(positions)
+function build(positions; config = Config())
     root = _create_root(positions)
-    tree = Tree(root, positions)
+    tree = Tree(root, positions, config)
 
     _build_next_level!(tree, 1, positions)
 
@@ -72,13 +81,15 @@ function _build_next_level!(tree, parent_id, positions)
     end
 
     boxes = _create_children_boxes(parent.box)
+    boxes = _merge_boxes(boxes, tree.config.aspect_ratio)
     offset = parent.offset
     runner_idx = parent.offset + 1
+    n_childre = length(boxes)
 
-    resize!(tree.leafs, length(tree.leafs) + 8)
-    resize!(parent.children, 8)
+    resize!(tree.leafs, length(tree.leafs) + n_childre)
+    resize!(parent.children, n_childre)
 
-    for i in 1:8
+    for i in 1:n_childre
         leaf = Leaf(boxes[i])
         leaf.parent = parent_id
         leaf.offset = offset
@@ -92,11 +103,11 @@ function _build_next_level!(tree, parent_id, positions)
             end
         end
 
-        parent.children[i] = length(tree.leafs) - 8 + i
-        tree.leafs[length(tree.leafs) - 8 + i] = leaf
+        parent.children[i] = length(tree.leafs) - n_childre + i
+        tree.leafs[length(tree.leafs) - n_childre + i] = leaf
     end
 
-    for i in 1:8
+    for i in 1:n_childre
         _build_next_level!(tree, parent.children[i], positions)
     end
 end
@@ -138,4 +149,60 @@ function get_nodes(box::Cuboid)
     pos8 = [xmax[1], xmax[2], xmax[3]]
 
     return (pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8)
+end
+
+function _merge_boxes(_boxes, aspect_ratio)
+    boxes = deepcopy(_boxes)
+
+    if aspect_ratio == 0.0
+        return boxes
+    end
+
+    diff = boxes[1].xmax - boxes[1].xmin
+    merge = [false, false, false]
+
+    merge[1] = diff[2] / diff[1] > aspect_ratio || diff[3] / diff[1] > aspect_ratio
+    merge[2] = diff[1] / diff[2] > aspect_ratio || diff[3] / diff[2] > aspect_ratio
+    merge[3] = diff[1] / diff[3] > aspect_ratio || diff[2] / diff[3] > aspect_ratio
+
+    if merge[1] && merge[2]
+        box1 = Cuboid(boxes[1].xmin, boxes[3].xmax)
+        box2 = Cuboid(boxes[4].xmin, boxes[6].xmax)
+
+        boxes = (box1, box2)
+    elseif merge[1] && merge[3]
+        box1 = Cuboid(boxes[1].xmin, boxes[8].xmax)
+        box2 = Cuboid(boxes[2].xmin, boxes[7].xmax)
+
+        boxes = (box1, box2)
+    elseif merge[2] && merge[3]
+        box1 = Cuboid(boxes[1].xmin, boxes[8].xmax)
+        box2 = Cuboid(boxes[2].xmin, boxes[7].xmax)
+
+        boxes = (box1, box2)
+    elseif merge[1]
+        box1 = Cuboid(boxes[1].xmin, [boxes[2].xmax[1], boxes[1].xmax[2], boxes[1].xmax[3]])
+        box2 = Cuboid(boxes[4].xmin, [boxes[3].xmax[1], boxes[4].xmax[2], boxes[4].xmax[3]])
+        box3 = Cuboid(boxes[5].xmin, [boxes[6].xmax[1], boxes[5].xmax[2], boxes[5].xmax[3]])
+        box4 = Cuboid(boxes[8].xmin, [boxes[7].xmax[1], boxes[8].xmax[2], boxes[8].xmax[3]])
+
+        boxes = (box1, box2, box3, box4)
+    elseif merge[2]
+        box1 = Cuboid(boxes[1].xmin, [boxes[1].xmax[1], boxes[4].xmax[2], boxes[1].xmax[3]])
+        box2 = Cuboid(boxes[2].xmin, [boxes[2].xmax[1], boxes[3].xmax[2], boxes[2].xmax[3]])
+
+        box3 = Cuboid(boxes[5].xmin, [boxes[5].xmax[1], boxes[8].xmax[2], boxes[5].xmax[3]])
+        box4 = Cuboid(boxes[6].xmin, [boxes[6].xmax[1], boxes[7].xmax[2], boxes[6].xmax[3]])
+
+        boxes = (box1, box2, box3, box4)
+    elseif merge[3]
+        box1 = Cuboid(boxes[1].xmin, [boxes[1].xmax[1], boxes[1].xmax[2], boxes[5].xmax[3]])
+        box2 = Cuboid(boxes[2].xmin, [boxes[2].xmax[1], boxes[2].xmax[2], boxes[6].xmax[3]])
+        box3 = Cuboid(boxes[3].xmin, [boxes[3].xmax[1], boxes[3].xmax[2], boxes[7].xmax[3]])
+        box4 = Cuboid(boxes[4].xmin, [boxes[4].xmax[1], boxes[4].xmax[2], boxes[8].xmax[3]])
+
+        boxes = (box1, box2, box3, box4)
+    end
+
+    return boxes
 end

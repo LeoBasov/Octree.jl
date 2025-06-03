@@ -22,8 +22,12 @@ function create_positions(N)
     return positions
 end
 
+config = Config()
+
+config.aspect_ratio = 1.5
+
 particles = create_positions(20000)
-tree = build(particles)
+tree = build(particles; config = config)
 write_vtk("vtk_test", tree)
 
 open("particles.csv", "w") do file
