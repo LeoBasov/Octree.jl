@@ -7,12 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2025-06-02
+## [0.3.0] - 2025-06-03
 
 ### Added
 
-- basic octree structure
-- resolution criterium based on element number with a hard coded threshhold
+- consideration of aspect ratio in the building of octree
 
 ## [0.2.0] - 2025-06-02
 
@@ -23,3 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - several bugs in tree code
+
+## [0.1.0] - 2025-06-02
+
+### Added
+
+- basic octree structure
+- resolution criterium based on element number with a hard coded threshhold
