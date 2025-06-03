@@ -1,8 +1,9 @@
 mutable struct Config
     aspect_ratio::AbstractFloat
+    n_min::Integer
 
-    function Config(;aspect_ratio = 0.0)
-        new(aspect_ratio)
+    function Config(;aspect_ratio = 0.0, n_min = 10)
+        new(aspect_ratio, n_min)
     end
 end
 
@@ -75,7 +76,7 @@ function _build_next_level!(tree, parent_id, positions)
     parent = tree.leafs[parent_id]
 
     # dummy check
-    if parent.n_elements < 10
+    if parent.n_elements < tree.config.n_min
         push!(tree.buttom_leafs, parent_id)
         return
     end
