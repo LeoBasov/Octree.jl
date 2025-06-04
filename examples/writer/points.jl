@@ -32,6 +32,6 @@ println(length(points))
 
 tree = build(points; config = config)
 
-@profview write_vtk("vtk_test", tree)
+write_vtk("vtk_test", tree)
 
 println("done")
