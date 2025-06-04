@@ -1,8 +1,9 @@
 mutable struct Config
     aspect_ratio::AbstractFloat
+    n_min::Integer
 
-    function Config(;aspect_ratio = 0.0)
-        new(aspect_ratio)
+    function Config(;aspect_ratio = 0.0, n_min = 10)
+        new(aspect_ratio, n_min)
     end
 end
 
@@ -75,7 +76,7 @@ function _build_next_level!(tree, parent_id, positions)
     parent = tree.leafs[parent_id]
 
     # dummy check
-    if parent.n_elements < 10
+    if parent.n_elements < tree.config.n_min
         push!(tree.buttom_leafs, parent_id)
         return
     end
@@ -151,9 +152,7 @@ function get_nodes(box::Cuboid)
     return (pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8)
 end
 
-function _merge_boxes(_boxes, aspect_ratio)
-    boxes = deepcopy(_boxes)
-
+function _merge_boxes(boxes, aspect_ratio)
     if aspect_ratio == 0.0
         return boxes
     end
