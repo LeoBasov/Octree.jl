@@ -152,9 +152,7 @@ function get_nodes(box::Cuboid)
     return (pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8)
 end
 
-function _merge_boxes(_boxes, aspect_ratio)
-    boxes = deepcopy(_boxes)
-
+function _merge_boxes(boxes, aspect_ratio)
     if aspect_ratio == 0.0
         return boxes
     end
