@@ -22,7 +22,8 @@ end
 
 config = Config()
 
-config.aspect_ratio = 1.5
+config.aspect_ratio = 1.5 # max cell aspect ratio
+config.n_min = 10 # min number of particles per cell for subdivision
 
 file_name = "examples/writer/points_cylinder.asc"
 points = read_points(file_name)
@@ -31,6 +32,6 @@ println(length(points))
 
 tree = build(points; config = config)
 
-write_vtk("vtk_test", tree)
+@profview write_vtk("vtk_test", tree)
 
 println("done")
